@@ -24,7 +24,7 @@
   <script>
     const startTime = new Date("2025-06-03T16:35:00+09:00");
     const endTime = new Date("2025-06-03T16:45:00+09:00");
-    const ytURL = "https://www.youtube.com/embed/9x8JrN4Cnxw?autoplay=1&controls=0&rel=0";
+    const ytURL = "https://www.youtube.com/embed/9x8JrN4Cnxw?autoplay=1&mute=1&controls=0&rel=0";
 
     const countdown = document.getElementById("countdown");
     const iframe = document.getElementById("ytplayer");
@@ -36,7 +36,6 @@
       const now = new Date();
 
       if (now < startTime) {
-        // カウントダウン表示
         const diff = Math.floor((startTime - now) / 1000);
         const mins = Math.floor(diff / 60);
         const secs = diff % 60;
@@ -46,15 +45,13 @@
         standbyImage.style.display = "block";
         title.textContent = "⏳ 配信準備中";
       } else if (now >= startTime && now < endTime) {
-        // 配信中
         countdown.style.display = "none";
         standbyImage.style.display = "none";
-        iframe.src = ytURL;
+        if (!iframe.src) iframe.src = ytURL; // 再読み込みを防止
         iframe.style.display = "block";
-        title.textContent = "🔴 勉強会開催中（LIVE風）";
+        title.textContent = "🔴 勉強会開催中";
         message.textContent = "";
       } else {
-        // 配信終了
         countdown.style.display = "none";
         iframe.style.display = "none";
         standbyImage.style.display = "none";
