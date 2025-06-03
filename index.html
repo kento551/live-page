@@ -5,55 +5,58 @@
   <title>擬似ライブ配信</title>
   <style>
     body { text-align: center; font-family: sans-serif; padding: 50px; }
+    #status { font-size: 1.5em; margin: 20px; }
     #countdown { font-size: 2em; color: red; margin: 20px; }
-    #ytContainer { display: none; }
+    iframe { margin-top: 30px; display: none; }
+    #placeholder { width: 640px; height: 360px; background: url("standby.png") no-repeat center center; background-size: cover; margin: auto; }
   </style>
 </head>
 <body>
-  <h1>⏳ 配信準備中</h1>
+  <h1 id="status">⏳ 配信準備中</h1>
   <div id="countdown">あと数秒で配信開始...</div>
-  <div id="ytContainer">
-    <iframe
-      id="ytplayer"
-      width="640" height="360"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen
-    ></iframe>
-  </div>
+  <div id="placeholder"></div>
+  <iframe id="ytplayer" width="640" height="360"
+    src=""
+    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+  </iframe>
 
   <script>
-    // ⏰ 配信開始時刻：本日 2025年6月3日 15:45:00（日本時間）
-    const startTime = new Date();
-    startTime.setHours(15, 45, 0, 0);  // 本日 15:45:00
-
-    // ✅ あなたのYouTube動画IDを反映済み
-    const ytURL = "https://www.youtube.com/embed/9x8JrN4Cnxw?autoplay=1&controls=0&rel=0&start=0";
+    const startTime = new Date("2025-06-02T16:15:00+09:00");
+    const endTime = new Date("2025-06-02T16:20:00+09:00");
+    const ytURL = "https://www.youtube.com/embed/9x8JrN4Cnxw?autoplay=1&controls=0&rel=0";
 
     const countdown = document.getElementById("countdown");
+    const status = document.getElementById("status");
     const iframe = document.getElementById("ytplayer");
-    const container = document.getElementById("ytContainer");
+    const placeholder = document.getElementById("placeholder");
 
-    let hasStarted = false;
-
-    function updateCountdown() {
+    function updateDisplay() {
       const now = new Date();
-      const diff = Math.floor((startTime - now) / 1000);
 
-      if (diff <= 0 && !hasStarted) {
-        countdown.style.display = "none";
-        container.style.display = "block";
-        iframe.src = ytURL;
-        hasStarted = true;
-      } else if (!hasStarted) {
-        const mins = String(Math.floor(diff / 60)).padStart(2, '0');
-        const secs = String(diff % 60).padStart(2, '0');
+      if (now < startTime) {
+        const diff = Math.floor((startTime - now) / 1000);
+        const mins = Math.floor(diff / 60);
+        const secs = diff % 60;
         countdown.textContent = `あと ${mins}分 ${secs}秒 で配信開始`;
+        iframe.style.display = "none";
+        placeholder.style.display = "block";
+        status.textContent = "⏳ 配信準備中";
+      } else if (now >= startTime && now < endTime) {
+        countdown.style.display = "none";
+        placeholder.style.display = "none";
+        iframe.src = ytURL;
+        iframe.style.display = "block";
+        status.textContent = "🔴 勉強会開催中";
+      } else {
+        countdown.style.display = "none";
+        placeholder.style.display = "none";
+        iframe.style.display = "none";
+        status.textContent = "✅ 勉強会は終了しました。ご参加ありがとうございました。";
       }
     }
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    updateDisplay();
+    setInterval(updateDisplay, 1000);
   </script>
 </body>
 </html>
