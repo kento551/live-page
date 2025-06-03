@@ -23,11 +23,13 @@
   </div>
 
   <script>
-    // ⏰ 開始時刻（本日 15:45）
+    // ⏰ 配信開始時刻：本日 2025年6月3日 15:45:00（日本時間）
     const startTime = new Date();
-    startTime.setHours(15, 45, 0, 0);  // 本日15:45:00
+    startTime.setHours(15, 45, 0, 0);  // 本日 15:45:00
 
-    const ytURL = "https://youtu.be/9x8JrN4Cnxw";
+    // ✅ あなたのYouTube動画IDを反映済み
+    const ytURL = "https://www.youtube.com/embed/9x8JrN4Cnxw?autoplay=1&controls=0&rel=0&start=0";
+
     const countdown = document.getElementById("countdown");
     const iframe = document.getElementById("ytplayer");
     const container = document.getElementById("ytContainer");
@@ -50,6 +52,7 @@
       }
     }
 
+    updateCountdown();
     setInterval(updateCountdown, 1000);
   </script>
 </body>
