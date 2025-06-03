@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>擬似ライブ配信</title>
+  <style>
+    body { text-align: center; font-family: sans-serif; padding: 50px; }
+    #countdown { font-size: 2em; color: red; margin: 20px; }
+    #ytContainer { display: none; }
+  </style>
+</head>
+<body>
+  <h1>⏳ 配信準備中</h1>
+  <div id="countdown">あと数秒で配信開始...</div>
+  <div id="ytContainer">
+    <iframe
+      id="ytplayer"
+      width="640" height="360"
+      frameborder="0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen
+    ></iframe>
+  </div>
+
+  <script>
+    // ⏰ 開始時刻（本日 15:45）
+    const startTime = new Date();
+    startTime.setHours(15, 45, 0, 0);  // 本日15:45:00
+
+    const ytURL = "https://youtu.be/9x8JrN4Cnxw";
+    const countdown = document.getElementById("countdown");
+    const iframe = document.getElementById("ytplayer");
+    const container = document.getElementById("ytContainer");
+
+    let hasStarted = false;
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = Math.floor((startTime - now) / 1000);
+
+      if (diff <= 0 && !hasStarted) {
+        countdown.style.display = "none";
+        container.style.display = "block";
+        iframe.src = ytURL;
+        hasStarted = true;
+      } else if (!hasStarted) {
+        const mins = String(Math.floor(diff / 60)).padStart(2, '0');
+        const secs = String(diff % 60).padStart(2, '0');
+        countdown.textContent = `あと ${mins}分 ${secs}秒 で配信開始`;
+      }
+    }
+
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
