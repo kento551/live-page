@@ -5,58 +5,66 @@
   <title>擬似ライブ配信</title>
   <style>
     body { text-align: center; font-family: sans-serif; padding: 50px; }
-    #status { font-size: 1.5em; margin: 20px; }
     #countdown { font-size: 2em; color: red; margin: 20px; }
-    iframe { margin-top: 30px; display: none; }
-    #placeholder { width: 640px; height: 360px; background: url("勉強会のタイトル画像.png") no-repeat center center; background-size: cover; margin: auto; }
+    iframe { display: none; margin-top: 30px; }
+    #message { font-size: 1.5em; margin-top: 20px; }
+    img { max-width: 600px; margin-top: 30px; }
   </style>
 </head>
 <body>
-  <h1 id="status">⏳ 配信準備中</h1>
-  <div id="countdown">あと数秒で配信開始...</div>
-  <div id="placeholder"></div>
+  <h1 id="mainTitle">⏳ 配信準備中</h1>
+  <div id="countdown">あと少しで配信開始...</div>
+  <img id="standbyImage" src="勉強会のタイトル画像.png" alt="準備中の画像" />
   <iframe id="ytplayer" width="640" height="360"
     src=""
     frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
   </iframe>
+  <div id="message"></div>
 
   <script>
-    const startTime = new Date("2025-06-03T17:00:00+09:00");
-    const endTime = new Date("2025-06-03T17:30:00+09:00");
+    const startTime = new Date("2025-06-02T16:35:00+09:00");
+    const endTime = new Date("2025-06-02T16:45:00+09:00");
     const ytURL = "https://www.youtube.com/embed/9x8JrN4Cnxw?autoplay=1&controls=0&rel=0";
 
     const countdown = document.getElementById("countdown");
-    const status = document.getElementById("status");
     const iframe = document.getElementById("ytplayer");
-    const placeholder = document.getElementById("placeholder");
+    const standbyImage = document.getElementById("standbyImage");
+    const message = document.getElementById("message");
+    const title = document.getElementById("mainTitle");
 
-    function updateDisplay() {
+    function updateStatus() {
       const now = new Date();
 
       if (now < startTime) {
+        // カウントダウン表示
         const diff = Math.floor((startTime - now) / 1000);
         const mins = Math.floor(diff / 60);
         const secs = diff % 60;
         countdown.textContent = `あと ${mins}分 ${secs}秒 で配信開始`;
+        countdown.style.display = "block";
         iframe.style.display = "none";
-        placeholder.style.display = "block";
-        status.textContent = "⏳ 配信準備中";
+        standbyImage.style.display = "block";
+        title.textContent = "⏳ 配信準備中";
       } else if (now >= startTime && now < endTime) {
+        // 配信中
         countdown.style.display = "none";
-        placeholder.style.display = "none";
+        standbyImage.style.display = "none";
         iframe.src = ytURL;
         iframe.style.display = "block";
-        status.textContent = "🔴 勉強会開催中";
+        title.textContent = "🔴 勉強会開催中（LIVE風）";
+        message.textContent = "";
       } else {
+        // 配信終了
         countdown.style.display = "none";
-        placeholder.style.display = "none";
         iframe.style.display = "none";
-        status.textContent = "✅ 勉強会は終了しました。ご参加ありがとうございました。";
+        standbyImage.style.display = "none";
+        title.textContent = "✅ 勉強会は終了しました";
+        message.textContent = "ご参加ありがとうございました。";
       }
     }
 
-    updateDisplay();
-    setInterval(updateDisplay, 1000);
+    updateStatus();
+    setInterval(updateStatus, 1000);
   </script>
 </body>
 </html>
