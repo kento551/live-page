@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>勉強会プレミア公開</title>
+  <title>擬似ライブ配信</title>
   <style>
     body { text-align: center; font-family: sans-serif; padding: 50px; }
     #countdown { font-size: 2em; color: red; margin: 20px; }
@@ -14,18 +14,17 @@
 <body>
   <h1 id="mainTitle">⏳ 配信準備中</h1>
   <div id="countdown">あと少しで配信開始...</div>
-  <img id="standbyImage" src="勉強会のタイトル画像.png" alt="準備中の画像" />
+  <img id="standbyImage" src="standby.png" alt="準備中の画像" />
   <iframe id="ytplayer" width="640" height="360"
-    src=""
-    frameborder="0"
-    allow="autoplay; encrypted-media"
+    src="https://www.youtube.com/embed/JMOeglU-RwA?rel=0&modestbranding=1"
+    frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
     allowfullscreen>
   </iframe>
   <div id="message"></div>
 
   <script>
     const startTime = new Date("2025-06-03T17:15:00+09:00");
-    const ytURL = "https://www.youtube.com/embed/JMOeglU-RwA?autoplay=1&rel=0&modestbranding=1";
+    const endTime = new Date("2025-06-03T17:25:00+09:00");
 
     const countdown = document.getElementById("countdown");
     const iframe = document.getElementById("ytplayer");
@@ -40,19 +39,24 @@
         const diff = Math.floor((startTime - now) / 1000);
         const mins = Math.floor(diff / 60);
         const secs = diff % 60;
-        countdown.textContent = `あと ${mins}分 ${secs}秒 でプレミア公開開始`;
+        countdown.textContent = `あと ${mins}分 ${secs}秒 で配信開始`;
         countdown.style.display = "block";
         iframe.style.display = "none";
         standbyImage.style.display = "block";
         title.textContent = "⏳ 配信準備中";
         message.textContent = "";
-      } else {
+      } else if (now >= startTime && now < endTime) {
         countdown.style.display = "none";
         standbyImage.style.display = "none";
-        iframe.src = ytURL;
         iframe.style.display = "block";
-        title.textContent = "🔴 勉強会 プレミア公開中！";
+        title.textContent = "🔴 勉強会開催中（LIVE風）";
         message.textContent = "";
+      } else {
+        countdown.style.display = "none";
+        iframe.style.display = "none";
+        standbyImage.style.display = "none";
+        title.textContent = "✅ 勉強会は終了しました";
+        message.textContent = "ご参加ありがとうございました。";
       }
     }
 
